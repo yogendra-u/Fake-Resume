@@ -1,6 +1,9 @@
 
 import './App.css';
 
+import Index from './component/example';
+import Fake from './Resume/fake';
+
 function App() {
   return (
     <div className="App">
@@ -17,7 +20,12 @@ function App() {
         >
           Learn React
         </a>
-      </header>
+
+
+    
+      </header> */}
+        <Index />
+      <Fake />
     </div>
   );
 }
