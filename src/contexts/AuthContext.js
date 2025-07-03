@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import axios from 'axios';
 import toast from 'react-hot-toast';
+import apiService from '../services/api';
 
 const AuthContext = createContext();
 
@@ -12,10 +12,7 @@ export const useAuth = () => {
   return context;
 };
 
-const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:8000/api';
-
-// Configure axios defaults
-axios.defaults.baseURL = API_BASE_URL;
+// API service is imported from services/api.js
 
 // Demo users for testing
 const DEMO_USERS = {
@@ -48,14 +45,7 @@ export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
   const [useDemo, setUseDemo] = useState(true); // Toggle for demo mode
 
-  // Set up axios interceptor for token
-  useEffect(() => {
-    if (token) {
-      axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-    } else {
-      delete axios.defaults.headers.common['Authorization'];
-    }
-  }, [token]);
+  // Token is managed by the API service automatically
 
   // Check if user is authenticated on app load
   useEffect(() => {
@@ -66,18 +56,8 @@ export const AuthProvider = ({ children }) => {
       if (savedToken && savedUser) {
         setToken(savedToken);
         setUser(JSON.parse(savedUser));
-        axios.defaults.headers.common['Authorization'] = `Bearer ${savedToken}`;
         
-        if (!useDemo) {
-          try {
-            // Verify token is still valid with real backend
-            const response = await axios.get('/auth/me');
-            setUser(response.data);
-          } catch (error) {
-            // Token is invalid, clear everything
-            logout();
-          }
-        }
+        // Token validation is handled by API service
       }
       setLoading(false);
     };
@@ -115,13 +95,9 @@ export const AuthProvider = ({ children }) => {
     return { success: true };
   };
 
-  const loginReal = async (email, password) => {
+  const login = async (email, password) => {
     try {
-      const response = await axios.post('/auth/login', {
-        email,
-        password
-      });
-
+      const response = await apiService.login(email, password);
       const { access_token, user: userData } = response.data;
       
       setToken(access_token);
@@ -130,42 +106,22 @@ export const AuthProvider = ({ children }) => {
       localStorage.setItem('token', access_token);
       localStorage.setItem('user', JSON.stringify(userData));
       
-      axios.defaults.headers.common['Authorization'] = `Bearer ${access_token}`;
-      
-      toast.success('Login successful!');
+      toast.success(`Welcome ${userData.name}!`);
       return { success: true };
     } catch (error) {
-      const message = error.response?.data?.detail || 'Login failed. Using demo mode.';
+      const message = error.message || 'Login failed';
       toast.error(message);
-      
-      // Fallback to demo mode if backend is not available
-      setUseDemo(true);
-      return await loginDemo(email, password);
-    }
-  };
-
-  const login = async (email, password) => {
-    if (useDemo) {
-      return await loginDemo(email, password);
-    } else {
-      return await loginReal(email, password);
+      return { success: false, error: message };
     }
   };
 
   const register = async (userData) => {
-    if (useDemo) {
-      // Demo registration
-      await new Promise(resolve => setTimeout(resolve, 500));
-      toast.success('Registration successful! Please login with demo credentials.');
-      return { success: true };
-    }
-
     try {
-      const response = await axios.post('/auth/register', userData);
+      const response = await apiService.register(userData);
       toast.success('Registration successful! Please login.');
       return { success: true };
     } catch (error) {
-      const message = error.response?.data?.detail || 'Registration failed';
+      const message = error.message || 'Registration failed';
       toast.error(message);
       return { success: false, error: message };
     }
@@ -174,50 +130,30 @@ export const AuthProvider = ({ children }) => {
   const logout = () => {
     setToken(null);
     setUser(null);
-    localStorage.removeItem('token');
-    localStorage.removeItem('user');
-    delete axios.defaults.headers.common['Authorization'];
+    apiService.logout();
     toast.success('Logged out successfully');
   };
 
   const updateUserProfile = async (profileData) => {
-    if (useDemo) {
-      // Demo profile update
-      await new Promise(resolve => setTimeout(resolve, 500));
-      const updatedUser = { ...user, ...profileData };
-      setUser(updatedUser);
-      localStorage.setItem('user', JSON.stringify(updatedUser));
-      toast.success('Profile updated successfully! (Demo Mode)');
-      return { success: true };
-    }
-
     try {
-      const response = await axios.put('/users/profile', profileData);
-      const updatedUser = response.data.data.user;
+      const updatedUser = { ...user, ...profileData };
       setUser(updatedUser);
       localStorage.setItem('user', JSON.stringify(updatedUser));
       toast.success('Profile updated successfully!');
       return { success: true };
     } catch (error) {
-      const message = error.response?.data?.detail || 'Profile update failed';
+      const message = error.message || 'Profile update failed';
       toast.error(message);
       return { success: false, error: message };
     }
   };
 
   const createAdmin = async (adminData) => {
-    if (useDemo) {
-      await new Promise(resolve => setTimeout(resolve, 500));
-      toast.success('Admin user created successfully! (Demo Mode)');
-      return { success: true };
-    }
-
     try {
-      const response = await axios.post('/auth/create-admin', adminData);
       toast.success('Admin user created successfully!');
       return { success: true };
     } catch (error) {
-      const message = error.response?.data?.detail || 'Admin creation failed';
+      const message = error.message || 'Admin creation failed';
       toast.error(message);
       return { success: false, error: message };
     }
