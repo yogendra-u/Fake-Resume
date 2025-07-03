@@ -24,3 +24,8 @@
 2025-07-03T08:30:49Z ERR Connection terminated error="context canceled" connIndex=0
 2025-07-03T08:31:04Z INF Tunnel connection curve preferences: [X25519MLKEM768 CurveID(25497) CurveP256] connIndex=0 event=0 ip=198.41.192.7
 2025-07-03T08:31:04Z INF Registered tunnel connection connIndex=0 connection=ceced770-a67b-46a0-8c7e-5d9e880d259a event=0 ip=198.41.192.7 location=iad09 protocol=quic
+2025-07-03T08:32:49Z WRN Failed to serve tunnel connection error="context canceled" connIndex=0 event=0 ip=198.41.192.7
+2025-07-03T08:32:49Z INF Retrying connection in up to 1s connIndex=0 event=0 ip=198.41.192.7
+2025-07-03T08:32:49Z ERR Connection terminated error="context canceled" connIndex=0
+2025-07-03T08:32:57Z INF Tunnel connection curve preferences: [X25519MLKEM768 CurveID(25497) CurveP256] connIndex=0 event=0 ip=198.41.192.7
+2025-07-03T08:32:57Z INF Registered tunnel connection connIndex=0 connection=5c641e9b-7103-42af-b59a-2d4c226a5d4c event=0 ip=198.41.192.7 location=iad09 protocol=quic
