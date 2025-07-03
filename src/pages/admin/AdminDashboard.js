@@ -5,8 +5,8 @@ import {
   UsersIcon,
   ShoppingBagIcon,
   CurrencyDollarIcon,
-  TrendingUpIcon,
-  TrendingDownIcon,
+  ArrowTrendingUpIcon as TrendingUpIcon,
+  ArrowTrendingDownIcon as TrendingDownIcon,
   EyeIcon,
   PencilSquareIcon,
   TrashIcon
@@ -176,7 +176,7 @@ const AdminDashboard = () => {
             to="/admin/analytics"
             className="bg-white p-4 rounded-lg shadow hover:shadow-md transition-shadow text-center"
           >
-            <TrendingUpIcon className="h-8 w-8 text-orange-500 mx-auto mb-2" />
+            <ChartBarIcon className="h-8 w-8 text-orange-500 mx-auto mb-2" />
             <h3 className="font-semibold text-gray-900">Analytics</h3>
             <p className="text-sm text-gray-600">View detailed reports</p>
           </Link>

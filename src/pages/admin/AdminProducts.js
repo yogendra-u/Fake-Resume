@@ -6,8 +6,8 @@ import {
   TrashIcon,
   EyeIcon,
   FunnelIcon,
-  ArrowUpIcon,
-  ArrowDownIcon
+  ChevronUpIcon as ArrowUpIcon,
+  ChevronDownIcon as ArrowDownIcon
 } from '@heroicons/react/24/outline';
 
 const AdminProducts = () => {

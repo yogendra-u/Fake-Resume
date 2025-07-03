@@ -1,15 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import {
   ChartBarIcon,
-  TrendingUpIcon,
-  TrendingDownIcon,
+  ArrowTrendingUpIcon as TrendingUpIcon,
+  ArrowTrendingDownIcon as TrendingDownIcon,
   CurrencyDollarIcon,
   ShoppingBagIcon,
   UsersIcon,
   EyeIcon,
   CalendarDaysIcon,
-  ArrowUpIcon,
-  ArrowDownIcon
+  ChevronUpIcon as ArrowUpIcon,
+  ChevronDownIcon as ArrowDownIcon
 } from '@heroicons/react/24/outline';
 
 const AdminAnalytics = () => {
